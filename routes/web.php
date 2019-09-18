@@ -14,3 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'calendar'], function () {
+    Route::get('/','CalendarController@getIndex');
+});
