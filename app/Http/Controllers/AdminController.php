@@ -9,28 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
-    public function getSingup(){
-        return view('admin.singup');
-    }
-
-    public function postSingup(Request $req){
-        $user=new User;
-    	$user->username=$req->username;
-    	$user->password=Hash::make($req->password);
-        $user->email=$req->email;
-        $user->name=$req->name;
-        $user->age=$req->age;
-        $user->phone=$req->phone;
-        $user->address=$req->address;
-        $user->information=$req->information;
-        $user->department=$req->department;
-        $user->position=$req->position;
-        $user->permissions=$req->permissions;
-        $user->created_at=Carbon::now();
-        $user->save();
-        return redirect('calendar');
-    }
-
+  
     public function getSingin(){
         return view('admin.singin');
     }
@@ -44,5 +23,14 @@ class AdminController extends Controller
         else{
             return redirect('admin/singin')->with('alert','Đăng nhập không thành công');
         }
+    }
+
+    public function getLogout(){
+        Auth::logout();
+        return redirect('login');
+    }
+
+    public function getIndex(){
+        return view('admin.admin_index');
     }
 }

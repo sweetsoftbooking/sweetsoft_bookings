@@ -17,6 +17,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'password',
+        'permissions'
     ];
 
     /**
@@ -35,6 +36,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'permissions' => 'json'
     ];
 
     public function bookings()
@@ -44,11 +46,21 @@ class User extends Authenticatable
 
     public function role_user()
     {
-        return $this->belongsTo('App\Role_User', 'user_id', 'id');
+        return $this->hasMany(Role_User::class, 'user_id', 'id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class,'role_users', 'user_id', 'role_id');
     }
 
     public function rooms()
     {
         return $this->hasMany('App\Room', 'user_id', 'id');
+    }
+
+    public function hasPermission($flag)
+    {
+        return in_array( $flag, $this->permissions);
     }
 }

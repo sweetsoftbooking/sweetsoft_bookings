@@ -1,4 +1,4 @@
-@extends('calendar')
+@extends('admin.layout.main')
 
 @section('content')
 <div class="content-wrapper">
