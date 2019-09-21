@@ -35,7 +35,9 @@
                                     <td>{{$u->name}}</td>
                                     <td> {{$u->email}}</td>
 
-                                <td>@if ($u->roles->count()) {{$u->roles->first()->name}} @endif</td>
+                                <td>@if ($u->roles->count()) 
+                                    {{$u->roles->first()->name}} 
+                                    @endif</td>
 
                                     <td>
                                         <a class="btn btn-primary" href="admin/user/edit/{{$u->id}}">&ensp;Edit&ensp;</a><br>
