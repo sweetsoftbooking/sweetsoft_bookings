@@ -41,15 +41,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <label class="x-title" for="first-name">Age
-                                </label>
-                                <div class="x-content">
-                                    <input type="text" name="age" class="form-control">
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="form-group">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <label class="x-title" for="first-name">Phone
