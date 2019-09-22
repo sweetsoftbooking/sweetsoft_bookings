@@ -51,15 +51,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                <label class="x-title" for="first-name">Address
-                                </label>
-                                <div class="x-content">
-                                    <input type="text" name="address" class="form-control">
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class="form-group">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <label class="x-title" for="first-name">Information
