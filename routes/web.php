@@ -21,8 +21,25 @@ Route::group([
         'uses' => 'AdminController@getIndex',
 
     ]);
-    Route::group(['prefix' => 'calendar'], function () {
-        Route::get('/','CalendarController@getIndex');
+
+
+    Route::group(['prefix' => 'booking'], function () {
+        Route::get('/',[
+        'as' => 'bookings.list',
+        'uses' => 'BookingController@getIndex',
+        'permission' => 'bookings.view'
+        ]);
+        Route::get('add',[
+            'as' => 'bookings.create',
+            'uses' => 'BookingController@getAdd',
+            'permission' => 'bookings.create'
+            ]);
+
+            Route::get('listing',[
+                'as' => 'bookings.listing',
+                'uses' => 'BookingController@getListing',
+                'permission' => 'bookings.view'
+                ]);
     });
 
     Route::group(['prefix' => 'role'], function () {
@@ -95,6 +112,78 @@ Route::group([
             'as' => 'users.delete',
             'uses' => 'UserController@getDelete',
             'permission' => 'users.delete'
+        ]);
+    });
+
+    Route::group(['prefix' => 'event'], function () {
+        Route::get('add',[
+            'as' => 'events.create',
+            'uses' => 'EventController@getAdd',
+            'permission' => 'events.create'
+        ]);
+        Route::post('add',[
+            'as' => 'events.create',
+            'uses' => 'EventController@postAdd',
+            'permission' => 'events.create'
+        ]);
+
+        Route::get('/',[
+            'as' => 'events.list',
+            'uses' => 'EventController@getIndex',
+            'permission' => 'events.view'
+        ]);
+
+        Route::get('edit/{id}',[
+            'as' => 'events.edit',
+            'uses' => 'EventController@getEdit',
+            'permission' => 'events.edit'
+        ]);
+        Route::post('edit/{id}',[
+            'as' => 'events.edit',
+            'uses' => 'EventController@postEdit',
+            'permission' => 'events.edit'
+        ]);
+
+        Route::get('delete/{id}',[
+            'as' => 'events.delete',
+            'uses' => 'EventController@getDelete',
+            'permission' => 'events.delete'
+        ]);
+    });
+
+    Route::group(['prefix' => 'room'], function () {
+        Route::get('add',[
+            'as' => 'rooms.create',
+            'uses' => 'RoomController@getAdd',
+            'permission' => 'rooms.create'
+        ]);
+        Route::post('add',[
+            'as' => 'rooms.create',
+            'uses' => 'RoomController@postAdd',
+            'permission' => 'rooms.create'
+        ]);
+
+        Route::get('/',[
+            'as' => 'rooms.list',
+            'uses' => 'RoomController@getIndex',
+            'permission' => 'rooms.view'
+        ]);
+
+        Route::get('edit/{id}',[
+            'as' => 'rooms.edit',
+            'uses' => 'RoomController@getEdit',
+            'permission' => 'rooms.edit'
+        ]);
+        Route::post('edit/{id}',[
+            'as' => 'rooms.edit',
+            'uses' => 'RoomController@postEdit',
+            'permission' => 'rooms.edit'
+        ]);
+
+        Route::get('delete/{id}',[
+            'as' => 'rooms.delete',
+            'uses' => 'RoomController@getDelete',
+            'permission' => 'rooms.delete'
         ]);
     });
 

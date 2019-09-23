@@ -66,6 +66,24 @@
         </li>
 
         <li class="nav-item">
+          <a href="{{route('events.list')}}" class="nav-link">
+            <i class="nav-icon far fa-calendar-plus"></i>
+            <p>
+              Event
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a href="{{route('rooms.list')}}" class="nav-link">
+            <i class="nav-icon fas fa-hospital"></i>
+            <p>
+              Room
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
           <a href="admin/logout" class="nav-link active">
             <i class="nav-icon fas fa-power"></i>
             <p>
