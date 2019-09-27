@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Booking Event</title>
   <base href="{{asset('')}}">
   <!-- Tell the browser to be responsive to screen width -->
@@ -13,10 +14,10 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- fullCalendar -->
   <link rel="stylesheet" href="plugins/fullcalendar/main.min.css">
-  <link rel="stylesheet" href="plugins/fullcalendar-interaction/main.min.css">
   <link rel="stylesheet" href="plugins/fullcalendar-daygrid/main.min.css">
   <link rel="stylesheet" href="plugins/fullcalendar-timegrid/main.min.css">
   <link rel="stylesheet" href="plugins/fullcalendar-bootstrap/main.min.css">
+  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   
   <!-- Theme style -->
   <link href="public/assets/css/hummingbird-treeview.css" rel="stylesheet">
@@ -24,6 +25,8 @@
   
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -72,7 +75,9 @@
 <script src="plugins/fullcalendar-interaction/main.min.js"></script>
 <script src="plugins/fullcalendar-bootstrap/main.min.js"></script>
 <script src="public/assets/js/hummingbird-treeview.js"></script>
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
 
 @yield('script')
 <!-- Page specific script -->

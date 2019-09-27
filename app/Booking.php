@@ -8,6 +8,8 @@ class Booking extends Model
 {
     protected $table = 'bookings';
 
+    protected $guarded = [];
+
     public function event()
     {
         return $this->belongsTo('App\Event', 'event_id', 'id');

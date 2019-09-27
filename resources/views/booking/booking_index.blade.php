@@ -1,6 +1,17 @@
 @extends('admin.layout.main')
 
 @section('content')
+<style>
+  label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+    padding: 10px !important;
+    justify-content: left !important;
+  }
+</style>
+
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
@@ -78,50 +89,17 @@
           <div class="card card-primary">
             <div class="card-body p-0">
               <!-- THE CALENDAR -->
-
+              @if(session('alert'))
+              <div class="col-md-8 alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h5> {{session('alert')}}</h5>
+              </div>
+              @endif
               <div id="calendar" data-get-listing="{{ route('bookings.listing') }}"></div>
 
-              <div id="datepicker"></div>
+              <!-- <div id="datepicker"></div> -->
 
-              <div class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
 
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title">Create new event</h4>
-                    </div>
-
-                    <div class="modal-body">
-                      <div class="row">
-                        <div class="col-xs-12">
-                          <label class="col-xs-4" for="title">Event title</label>
-                          <input type="text" name="title" id="title" />
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-12">
-                          <label class="col-xs-4" for="starts-at">Starts at</label>
-                          <input type="text" name="starts_at" id="starts-at" />
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-12">
-                          <label class="col-xs-4" for="ends-at">Ends at</label>
-                          <input type="text" name="ends_at" id="ends-at" />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" id="close-event">Close</button>
-                      <button type="button" class="btn btn-primary" id="save-event">Save changes</button>
-                    </div>
-
-                  </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-              </div><!-- /.modal -->
             </div>
             <!-- /.card-body -->
           </div>
@@ -134,29 +112,145 @@
   </section>
   <!-- /.content -->
 </div>
+<div class="modal fade" id="orangeModalSubscription" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-notify modal-warning" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Header-->
+      <div class="modal-header text-center">
+        <h4 class="modal-title white-text w-100 font-weight-bold py-2">Create Booking</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="white-text">&times;</span>
+        </button>
+      </div>
+
+      <form>
+
+        <!--Body-->
+        <div class="modal-body">
+
+          <!-- *error message -->
+
+          <div class="col-md-12 form-group">
+            <p style="color:orangered" id="message_error"></p>
+          </div>
+
+
+          <!-- *input TITLE -->
+
+          <div class="col-md-12 form-group">
+            <label class="col-sm-12" for="name">Title</label>
+            <input type="text" class="form-control col-sm-7" name="title" id="title">
+          </div>
+
+
+          <!-- *input PEOPLE -->
+
+          <div class="col-md-12 form-group">
+            <label class="col-sm-12 people" for="name">Number of People</label>
+            <input type="number" class="form-control col-sm-7" name="people" id="people" min="1" max="300">
+            <style>
+              .people {
+                padding: 0px 0px 0px 10px !important;
+              }
+            </style>
+          </div>
+
+
+          <!-- *input START-END -->
+
+          <div class="form-group">
+            <label>Date and time range:</label>
+
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="far fa-calendar"></i></span>
+              </div>
+              <input type="text" class="form-control float-right" id="reservationtime" autocomplete="off">
+
+              <input type="hidden" id="start" name="start">
+              <input type="hidden" id="end" name="end">
+
+            </div>
+            <!-- /.input group -->
+          </div>
+
+          <!-- *input ROOM -->
+
+          <div class="form-group">
+            <label>Room</label>
+            <div class="input-group">
+              <select name="room" class="form-control" id="room">
+                <option>--- List Room ---</option>
+                <!-- @foreach($rooms as $r)
+                                    <option value="{{$r->id}}">{{$r->name}}</option>
+                                    @endforeach -->
+              </select>
+              <button type="button" style="font-size: 15px" class="btn btn-primary form-control col-sm-2"
+                id="check_room">Select</button>
+            </div>
+
+          </div>
+
+
+          <!-- *input CONTENT -->
+
+          <div class="col-md-12 form-group">
+            <label class="col-sm-12" for="name">Content</label>
+            <textarea class="form-control col-sm-7 input" rows="5" cols="10" name="content" id="content"></textarea>
+          </div>
+
+        </div>
+
+        <!-- !Footer-->
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="close-event">Close</button>
+          <button type="button" class="btn btn-primary" id="save-event">Save</button>
+        </div>
+      </form>
+
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
 @endsection
 
 @section('script')
 <script src="public/js/moment.js"></script>
+
 <script>
   $(function () {
 
-    /* initialize the external events
-     -----------------------------------------------------------------*/
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      parentEl: '#orangeModalSubscription',
+      autoUpdateInput: false,
+      timePicker: true,
+      timePickerIncrement: 15,
+      locale: {
+        format: 'MM/DD/YYYY hh:mm A'
+      }
+    }, function (start, end, label) {
+      $('#start').val(start.format('DD-MM-YYYY HH:mm'));
+      $('#end').val(end.format('DD-MM-YYYY HH:mm'));
 
+      console.log("A new date selection was made: " + start.format('DD-MM-YYYY HH:mm') + ' to ' + end.format('DD-MM-YYYY HH:mm'));
+    })
+    $('#reservationtime').on('apply.daterangepicker', function (ev, picker) {
+      $(this).val(picker.startDate.format('DD-MM-YYYY HH:mm') + ' - ' + picker.endDate.format('DD-MM-YYYY HH:mm'));
+    });
 
-    /* initialize the calendar
-     -----------------------------------------------------------------*/
-    //Date for the calendar events (dummy data)
+    $('#reservationtime').on('cancel.daterangepicker', function (ev, picker) {
+      $(this).val('');
+    });
 
+  })
+</script>
+<script>
+  $(function () {
     var Calendar = FullCalendar.Calendar;
-
     var calendarEl = document.getElementById('calendar');
-
-    // initialize the external events
-    // -----------------------------------------------------------------
-
-
 
     var calendar = new Calendar(calendarEl, {
       plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
@@ -172,9 +266,8 @@
 
       },
 
-      
-      droppable: false, // this allows things to be dropped onto the calendar !
-      selectable: false,
+      droppable: false, /* this allows things to be dropped onto the calendar ! */
+      selectable: false, // TODO: true => config
       selectHelper: true,
       editable: true,
       eventLimit: true,
@@ -188,36 +281,33 @@
         }
       },
       events: function (info, successCallback, failureCallback) {
+        console.log(info);
         $.ajax({
           url: $('#calendar').data('get-listing'),
           type: 'GET',
           dataType: 'json',
           data: {
-            start: info.start.valueOf(),
-            end: info.end.valueOf()
+            start: info.startStr,
+            end: info.endStr
           },
           success: function (response) {
-            
-            if(response.error == false){
+            if (response.error == false) {
               let events = [];
               const data = response.data
-              data.map(function( val ) {
+              data.map(function (val) { // map == foreach
                 events.push({
                   id: val.id,
                   title: val.title,
-                  start: val.start_date,
-                  end: val.end_date,
-                  backgroundColor: '#f39c12', //yellow
-                  borderColor    : '#f39c12' //yellow
+                  start: moment(val.from_datetime).format('YYYY-MM-DD HH:mm:ss'),
+                  end: moment(val.to_datetime).format('YYYY-MM-DD HH:mm:ss'),
+                  backgroundColor: 'green', //yellow
+
                 })
               });
               successCallback(events)
-             
-            }else{
+            } else {
               alert(response.message)
             }
-            
-           
           },
           error: function (response) {
             console.log(response)
@@ -225,55 +315,123 @@
         });
       },
 
-      eventClick: function(info) {
-        // alert('Event: ' + info.event.title);
-        
+      eventClick: function (info) {
         $('.modal').modal('show');
-        
         $('.modal').find('#title').val(info.event.title);
         $('.modal').find('#starts-at').val(moment(info.event.start).format('DD-MM-YYYY, HH:mm:ss '));
         $('.modal').find('#ends-at').val(moment(info.event.end).format('DD-MM-YYYY, HH:mm:ss '));
-
-      }
-
-
-      // this allows things to be dropped onto the calendar !!!
-
-    });
-    
-    $('#save-event').on('click', function () {
-      var title = $('#title').val();
-      if (title) {
-        var eventData = {
-          title: title,
-          start: $('#starts-at').val(),
-          end: $('#ends-at').val()
-        };
-        calendar.addEvent(eventData);
-        $('.modal').modal('hide');
-        // $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
       }
     });
+
+    // $('#save-event').on('click', function () {
+    //   var title = $('#title').val();
+    //   if (title) {
+    //     event = {
+    //       title: title,
+    //       start: $('#starts-at').val(),
+    //       end: $('#ends-at').val()
+    //     };
+
+    //     calendar.addEvent(event);
+    //     $('.modal').modal('hide');
+
+
+    //   }
+    // });
 
     $('#close-event').on('click', function () {
       $('.modal').find('input').val('');
     });
 
-    
-
-
-    // Clear modal inputs
-
     // hide modal
     $('.modal').modal('hide');
-
     calendar.render();
-    // $('#calendar').fullCalendar()
 
-    /* ADDING EVENTS */
+    $('#check_room').on('click', function () {
+      // alert('ok');
+
+      var start = $('#start').val();
+      var end = $('#end').val();
+      var people = $('#people').val();
+
+      const from = moment(start, 'DD-MM-YYYY HH:mm');
+      const to = moment(end, 'DD-MM-YYYY HH:mm');
+
+      $.ajax({
+        url: "{{ route('bookings.rooms') }}",
+        type: 'GET',
+        dataType: 'json',
+        data: { start, end, people },
+        success: function (response) {
+          if (response.error == false) {
+            $("#room").html('');
+            if (response.data && response.data.length) {
+              $('#message_error').hide();
+              response.data.map(function (value, index) {
+                $("#room").append('<option value="' + value.id + '">' + value.name + '</option>')
+              })
+
+            }
+
+          } else {
+            alert(response.message)
+          }
+        },
+        error: function (response) {
+          console.log(response)
+          if (response.status == 422) {
+            const errors = response.responseJSON.errors;
+            let message_error = ''
+            for (var error in errors) {
+
+              errors[error].map(function (value, index) {
+                message_error += (value + '<br>')
+              })
+            }
+            $('#message_error').html(message_error);
+            $('#message_error').show();
+
+          }
+
+        }
+      });
+
+    });
+ 
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+    $('#save-event').on('click', function () {
+      var title = $('#title').val();
+      var people = $('#people').val();
+      var start = $('#start').val();
+      var end = $('#end').val();
+      var content = $('#content').val();
+      var room = $('#room').val();
+
+      // console.log([title,people,from_datetime,to_datetime,content,room,user_id]);
+
+      $.ajax({
+        url: "{{ route('bookings.create') }}",
+        type: 'POST',
+        dataType: 'json',
+        data: { title, people, start, end, content, room },
+        success: function (response) {
+          if (response.error == false) {
+            calendar.refetchEvents();
+            $('.modal').modal('hide');
+          }
 
 
-  })
+        },
+        error: function (response) {
 
+        }
+      });
+
+    });
+  });
 </script>
 @endsection

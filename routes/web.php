@@ -29,17 +29,22 @@ Route::group([
         'uses' => 'BookingController@getIndex',
         'permission' => 'bookings.view'
         ]);
-        Route::get('add',[
+        Route::post('add',[
             'as' => 'bookings.create',
-            'uses' => 'BookingController@getAdd',
+            'uses' => 'BookingController@postAdd',
             'permission' => 'bookings.create'
             ]);
 
-            Route::get('listing',[
-                'as' => 'bookings.listing',
-                'uses' => 'BookingController@getListing',
-                'permission' => 'bookings.view'
-                ]);
+        Route::get('listing',[
+            'as' => 'bookings.listing',
+            'uses' => 'BookingController@getListing',
+            'permission' => 'bookings.view'
+            ]);
+        Route::get('rooms',[
+            'as' => 'bookings.rooms',
+            'uses' => 'BookingController@getRooms',
+            // 'permission' => 'bookings.view'
+            ]);
     });
 
     Route::group(['prefix' => 'role'], function () {

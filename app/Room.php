@@ -18,4 +18,8 @@ class Room extends Model
     {
         return $this->hasMany('App\Event', 'room_id', 'id');
     }
+
+    public function bookings(){
+        return $this->hasMany('App\Booking', 'room_id');
+    }
 }
