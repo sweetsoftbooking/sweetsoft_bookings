@@ -235,4 +235,14 @@ class BookingController extends Controller
         ]);
 
     }
+
+    public function postDelete(Request $request){
+        $bookings = Booking::find($request->id);
+        $bookings->delete();
+        return response()->json([
+            'error' => false,
+            'data' => [],
+            'message' => 'Success',
+        ]);
+    }
 }

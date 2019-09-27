@@ -100,7 +100,8 @@
                             <div id="calendar" data-get-listing="{{ route('bookings.listing') }}"
                                 data-get-edit="{{route('bookings.edit')}}"
                                 data-post-create="{{route('bookings.create')}}"
-                                data-post-edit="{{route('bookings.edit')}}"></div>
+                                data-post-edit="{{route('bookings.edit')}}"
+                                data-post-delete="{{route('bookings.delete')}}"></div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -122,10 +123,22 @@
         <div class="modal-content">
             <!-- !Header-->
             <div class="modal-header text-center">
-                <h4 class="modal-title white-text w-100 font-weight-bold py-2">Create Booking</h4>
+                <div class="pull-left">
+                    <button type="button" class="btn btn-danger" id="delete_event">Delete</button>
+                </div>
+                <h4 class="modal-title white-text w-100 font-weight-bold py-2" id="modal_title">Create Booking</h4>
                 <button type="button" class="close" id="top_close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" class="white-text">&times;</span>
                 </button>
+                <style>
+                    h4 {
+                        display: inline-block;
+                    }
+
+                    .pull-left {
+                        display: inline-block;
+                    }
+                </style>
             </div>
 
             <!-- !Body-->
@@ -182,8 +195,8 @@
                         <select name="room" class="js-example-basic-single" style="width:400px;" id="room">
                             <!-- <option>--- List Room ---</option> -->
                         </select>
-                        <button type="button" style="font-size: 15px; color:white" class="btn btn-warning form-control col-sm-2"
-                            id="check_room">Check</button>
+                        <button type="button" style="font-size: 15px"
+                            class="btn btn-primary form-control col-sm-2" id="check_room">Check</button>
                     </div>
                 </div>
 
@@ -201,7 +214,7 @@
             <!-- !Footer-->
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="close_event">Close</button>
-                <button type="button" class="btn btn-primary" id="add_event">Save</button>
+                <button type="button" class="btn btn-success" id="add_event">Save</button>
             </div>
 
         </div>
@@ -213,16 +226,16 @@
 @section('script')
 <script src="public/js/moment.js"></script>
 <script>
-$(document).ready(function() {
-    $('.js-example-basic-single').select2();
-    $('.js-example-basic-single').select2({
-    
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2();
+        $('.js-example-basic-single').select2({
+
+        });
     });
-});
 </script>
 <script>
     $(function () {
-        
+
         // TODO: daterangepicker
         const $reservationtime = $('#reservationtime')
         //Date range picker with time picker
@@ -335,6 +348,7 @@ $(document).ready(function() {
                     data: { id },
                     success: function (response) {
                         console.log(response.data);
+                        $('#modal_title').text(response.data.title);
                         $('.modal').find('#title').val(response.data.title);
                         $('.modal').find('#exclude').val(response.data.room_id);
                         $('.modal').find('#booking_id').val(response.data.id);
@@ -439,7 +453,7 @@ $(document).ready(function() {
 
         });
 
-        
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -487,7 +501,7 @@ $(document).ready(function() {
                     }
                 });
 
-            } 
+            }
             //TODO: edit event
             else if ($('#add_event').data('action') == 'edit_event') {
                 const url = $('#calendar').data('post-edit');
@@ -527,6 +541,28 @@ $(document).ready(function() {
             }
             // console.log([title,people,from_datetime,to_datetime,content,room,user_id]);
 
+        });
+
+        // TODO: delete event
+        $('#delete_event').on('click',function(){
+            var id = $('#booking_id').val();
+            $.ajax({
+                url: $('#calendar').data('post-delete'),
+                type: 'POST',
+                data: {id},
+                success:function(response){
+                    if (response.error == false) {
+                            calendar.refetchEvents(); //refresh fullcalendar
+                            $('.modal').modal('hide');
+                        }
+                        else {
+                            alert(response.message)
+                        }
+                },
+                error:function(response){
+
+                }
+            });
         });
 
     });

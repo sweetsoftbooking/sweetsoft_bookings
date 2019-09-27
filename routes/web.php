@@ -55,6 +55,11 @@ Route::group([
             'uses' => 'BookingController@postEdit',
             'permission' => 'bookings.edit'
         ]);
+        Route::post('delete/{id?}',[
+            'as' => 'bookings.delete',
+            'uses' => 'BookingController@postDelete',
+            'permission' => 'bookings.delete'
+        ]);
     });
 
     Route::group(['prefix' => 'role'], function () {
