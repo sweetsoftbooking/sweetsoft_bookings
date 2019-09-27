@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="plugins/fullcalendar-daygrid/main.min.css">
   <link rel="stylesheet" href="plugins/fullcalendar-timegrid/main.min.css">
   <link rel="stylesheet" href="plugins/fullcalendar-bootstrap/main.min.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   
   <!-- Theme style -->
@@ -76,6 +78,7 @@
 <script src="plugins/fullcalendar-bootstrap/main.min.js"></script>
 <script src="public/assets/js/hummingbird-treeview.js"></script>
 <script src="plugins/daterangepicker/daterangepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
 

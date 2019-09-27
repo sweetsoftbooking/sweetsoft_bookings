@@ -45,6 +45,16 @@ Route::group([
             'uses' => 'BookingController@getRooms',
             // 'permission' => 'bookings.view'
             ]);
+        Route::get('edit/{id?}',[
+            'as' => 'bookings.edit',
+            'uses' => 'BookingController@getEdit',
+            'permission' => 'bookings.edit'
+            ]);
+        Route::post('edit/{id?}',[
+            'as' => 'bookings.edit',
+            'uses' => 'BookingController@postEdit',
+            'permission' => 'bookings.edit'
+        ]);
     });
 
     Route::group(['prefix' => 'role'], function () {
