@@ -51,7 +51,7 @@ class RoleController extends Controller
         return view('role.role_edit',compact('role','permissions'));
     }
 
-    public function postEdit(RoleRequest $req,$id){
+    public function postEdit(Request $req,$id){
         $role = Role::find($id);
         $role->name = $req->name;
         

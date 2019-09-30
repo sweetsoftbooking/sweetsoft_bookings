@@ -36,18 +36,38 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="sticky-top mb-3">
-                        <!-- !DARAGBLE EVENT -->
+                        <!-- !CREATE EVENT -->
+                        <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Create Booking</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
+                                        <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
+                                        <ul class="fc-color-picker" id="color-chooser">
+                                            <li><a class="text-primary" href="#" id="blue"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-warning" href="#" id="yellow"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-success" href="#" id="green"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-danger" href="#" id="pink"><i class="fas fa-square"></i></a></li>
+                                            <!-- <li><a class="text-muted" href="#" id="gray"><i class="fas fa-square"></i></a></li> -->
+                                        </ul>
+                                    </div>
+                                    <!-- /input-group -->
+                                </div>
+                            </div>
+                        <!-- !BOOKING OF ROOM -->
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Draggable Events</h4>
+                                <h4 class="card-title">Bookings of Room</h4>
                             </div>
                             <div class="card-body">
                                 <!-- the events -->
                                 <div id="external-events">
                                     <div class="checkbox">
                                         <label for="drop-remove">
-                                            <input type="checkbox" id="drop-remove">
-                                            remove after drop
+                                            <select name="" id="">
+                                                <option value="">--- LIST ROOM ---</option>
+                                            </select>
                                         </label>
                                     </div>
                                 </div>
@@ -55,34 +75,7 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
-                        <!-- !CREATE EVENT -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Create Event</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                                    <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                                    <ul class="fc-color-picker" id="color-chooser">
-                                        <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
-                                    </ul>
-                                </div>
-                                <!-- /btn-group -->
-                                <div class="input-group">
-                                    <input id="new-event" type="text" class="form-control" placeholder="Event Title">
-
-                                    <div class="input-group-append">
-                                        <button id="add-new-event" type="button" class="btn btn-primary">Add</button>
-                                    </div>
-                                    <!-- /btn-group -->
-                                </div>
-                                <!-- /input-group -->
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
                 <!-- /.col -->
@@ -101,7 +94,8 @@
                                 data-get-edit="{{route('bookings.edit')}}"
                                 data-post-create="{{route('bookings.create')}}"
                                 data-post-edit="{{route('bookings.edit')}}"
-                                data-post-delete="{{route('bookings.delete')}}"></div>
+                                data-post-delete="{{route('bookings.delete')}}"
+                                data-post-drag="{{route('bookings.drag')}}"></div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -122,11 +116,11 @@
         <!--Content-->
         <div class="modal-content">
             <!-- !Header-->
-            <div class="modal-header text-center">
+            <div class="modal-header text-center" style="background-color: orange">
                 <div class="pull-left">
                     <button type="button" class="btn btn-danger" id="delete_event">Delete</button>
                 </div>
-                <h4 class="modal-title white-text w-100 font-weight-bold py-2" id="modal_title">Create Booking</h4>
+                <h4 class="modal-title white-text w-100 font-weight-bold py-2" id="modal_title" style="color:white">Create Booking</h4>
                 <button type="button" class="close" id="top_close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" class="white-text">&times;</span>
                 </button>
@@ -142,7 +136,7 @@
             </div>
 
             <!-- !Body-->
-            <div class="modal-body">
+            <div class="modal-body"> 
 
                 <!-- *error message -->
                 <div class="col-md-12 form-group">
@@ -193,8 +187,9 @@
                     <label>Room:</label>
                     <div class="input-group">
                         <select name="room" class="js-example-basic-single" style="width:400px;" id="room">
-                            <!-- <option>--- List Room ---</option> -->
+                           
                         </select>
+                        
                         <button type="button" style="font-size: 15px"
                             class="btn btn-primary form-control col-sm-2" id="check_room">Check</button>
                     </div>
@@ -235,7 +230,11 @@
 </script>
 <script>
     $(function () {
-
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         // TODO: daterangepicker
         const $reservationtime = $('#reservationtime')
         //Date range picker with time picker
@@ -290,6 +289,8 @@
                     text: 'add event...',
                     click: function () {
                         $('#add_event').data('action', 'add_event');
+                        $('#delete_event').hide();
+                        $('#modal_title').text("Create Booking");
                         $('.modal').modal('show');
                         $('.modal').find('#exclude').val('');
 
@@ -336,8 +337,9 @@
 
             //TODO: click event
             eventClick: function (info) {
+                
                 $('#add_event').data('action', 'edit_event');
-
+                $('#delete_event').show();
                 $('.modal').modal('show');
                 var id = info.event.id
                 // if id = event.id
@@ -348,15 +350,16 @@
                     data: { id },
                     success: function (response) {
                         console.log(response.data);
-                        $('#modal_title').text(response.data.title);
-                        $('.modal').find('#title').val(response.data.title);
-                        $('.modal').find('#exclude').val(response.data.room_id);
-                        $('.modal').find('#booking_id').val(response.data.id);
-                        $('.modal').find('#people').val(response.data.people);
-                        $('.modal').find('#content').val(response.data.content);
+                        const data = response.data;
+                        $('#modal_title').text(data.title);
+                        $('.modal').find('#title').val(data.title);
+                        $('.modal').find('#exclude').val(data.room_id);
+                        $('.modal').find('#booking_id').val(data.id);
+                        $('.modal').find('#people').val(data.people);
+                        $('.modal').find('#content').val(data.content);
 
-                        var start = moment(response.data.from_datetime),
-                            end = moment(response.data.to_datetime);
+                        var start = moment(data.from_datetime),
+                            end = moment(data.to_datetime);
 
                         $reservationtime.data('daterangepicker').setStartDate(start);
                         $reservationtime.data('daterangepicker').setEndDate(end);
@@ -367,19 +370,40 @@
                         $('.modal').find('#end').val(end.format('DD-MM-YYYY HH:mm'));
 
 
-                        const room = response.data.room;
+                        const room = data.room;
                         $("#room").html('')
                         $("#room").append('<option selected="selected" value="' + room.id + '">' + room.name + '</option>')
+
+                       if(data.has_edit){
+                           $('#add_event').hide();
+                           editable : false;
+                       }
                     },
                     error: function (response) {
 
                     }
-
-
                 })
+            },
 
-
-            }
+            // TODO: store drag event
+            eventDrop : function(info,event, delta, revertFunc){ 
+                const url = $('#calendar').data('post-drag');
+                var start = moment(info.event.start).format('DD-MM-YYYY HH:mm');
+                var end = moment(info.event.end).format('DD-MM-YYYY HH:mm');
+                $.ajax({
+                    url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{id:info.event.id,start , end},
+                    success:function(){
+                        alert("success drag");
+                    },error:function(){ 
+                        // console.log([event.start,event.end])
+                        alert("error drag !!!!");
+                        calendar.refetchEvents();
+                    }
+            });
+        }
         });
 
         $('#close_event').on('click', function () {
@@ -454,11 +478,7 @@
         });
 
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+       
         $('#add_event').on('click', function () {
             var title = $('#title').val();
             var people = $('#people').val();
@@ -478,7 +498,8 @@
                     data: { title, people, start, end, content, room },
                     success: function (response) {
                         if (response.error == false) {
-                            calendar.refetchEvents(); //refresh fullcalendar
+                            calendar.refetchEvents();
+                            $('#message_error').hide(); //refresh fullcalendar
                             $('.modal').modal('hide');
                         }
                         else {
@@ -513,6 +534,8 @@
                     success: function (response) {
                         if (response.error == false) {
                             calendar.refetchEvents(); //refresh fullcalendar
+                            $('#message_error').hide(); //refresh fullcalendar
+                            
                             $('.modal').modal('hide');
                         }
                         else {
@@ -553,6 +576,10 @@
                 success:function(response){
                     if (response.error == false) {
                             calendar.refetchEvents(); //refresh fullcalendar
+                            $('.modal').find('input').val('');
+                            $('.modal').find('textarea').val('');
+                            $('#room').find('option').remove();
+                            $('#message_error').hide();
                             $('.modal').modal('hide');
                         }
                         else {

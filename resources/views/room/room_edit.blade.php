@@ -55,17 +55,7 @@
                                     <label>Large</label>
                                     <input type="number" name="large" min="1" max="1000" class="form-control" value="{{$room->large}}">
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" name="status" value="0" id="defaultUnchecked"
-                                        {{$room->status==0?'checked':''}}>
-                                    <label class="custom-control-label" for="defaultUnchecked">Empty</label>
-                                  </div> 
-                                  <!-- Default checked -->
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" name="status" value="1" id="defaultChecked"
-                                        {{$room->status==1?'checked':''}}> 
-                                    <label class="custom-control-label" for="defaultChecked">Booked</label>
-                                  </div>
+                                
                             </div>
                             <!-- /.card-body -->
 

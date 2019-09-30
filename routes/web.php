@@ -48,11 +48,16 @@ Route::group([
         Route::get('edit/{id?}',[
             'as' => 'bookings.edit',
             'uses' => 'BookingController@getEdit',
-            'permission' => 'bookings.edit'
+            
             ]);
         Route::post('edit/{id?}',[
             'as' => 'bookings.edit',
             'uses' => 'BookingController@postEdit',
+            'permission' => 'bookings.edit'
+        ]);
+        Route::post('drag/{id?}',[
+            'as' => 'bookings.drag',
+            'uses' => 'BookingController@postDrag',
             'permission' => 'bookings.edit'
         ]);
         Route::post('delete/{id?}',[

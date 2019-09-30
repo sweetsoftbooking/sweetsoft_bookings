@@ -22,7 +22,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Large</th>
-                                    <th>Status</th>
+                                    <th>Floor</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{$e->name}}</td>
                                     <td>{{$e->large}}</td>
-                                    <td>{{$e->status==0?'Empty':'Booked'}}</td>
+                                    <td>{{$e->floor}}</td>
                                     <td>
                                         <a class="btn btn-primary" href="{{route('rooms.edit',$e->id)}}">Edit</a>
                                         <a class="btn btn-danger" href="{{route('rooms.delete',$e->id)}}">Delete</a>

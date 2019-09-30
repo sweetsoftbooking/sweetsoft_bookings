@@ -84,6 +84,15 @@
         </li>
 
         <li class="nav-item">
+          <a href="{{route('bookings.list')}}" class="nav-link">
+            <i class="nav-icon fas fa-bookmark"></i>
+            <p>
+              Booking
+            </p>
+          </a>
+        </li>
+
+        <li class="nav-item">
           <a href="admin/logout" class="nav-link active">
             <i class="nav-icon fas fa-power"></i>
             <p>

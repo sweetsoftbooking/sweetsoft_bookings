@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <label class="x-title" for="first-name">Password <span class="required">*</span>
                                 </label>
@@ -151,7 +151,7 @@
                                     <span id='message'></span>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-4 col-md-offset-4">
                             <button type="submit" class="btn btn-success">Submit</button>&emsp;
                             <a class="btn btn-primary" href="admin/user">Go To List</a>

@@ -191,6 +191,13 @@
                                         <li><i class="fa fa-plus"></i> <label> <input id="node-1" data-id="custom-1"
                                                     type="checkbox">Bookings</label>
                                             <ul>
+                                                    <li><label>
+                                                            <input class="hummingbirdNoParent" id="node-1-1"
+                                                                data-id="custom-1-1" type="checkbox" name="permissions[]"
+                                                                value="bookings.list" 
+                                                                {{in_array("bookings.list",$permissions)?"checked":""}}>
+                                                            View All</label>
+                                                    </li>
                                                 <li><label>
                                                         <input class="hummingbirdNoParent" id="node-1-1"
                                                             data-id="custom-1-1" type="checkbox" name="permissions[]"

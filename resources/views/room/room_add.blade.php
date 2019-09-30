@@ -61,15 +61,14 @@
                                     <label>Large</label>
                                     <input type="number" name="large" min="1" max="1000" class="form-control">
                                 </div>
-                                <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="defaultUnchecked" name="status" value="0" checked>
-                                    <label class="custom-control-label" for="defaultUnchecked">Empty</label>
-                                  </div> 
-                                  <!-- Default checked -->
-                                  <div class="custom-control custom-radio">
-                                    <input type="radio" class="custom-control-input" id="defaultChecked" name="status" value="1"> 
-                                    <label class="custom-control-label" for="defaultChecked">Booked</label>
-                                  </div>
+                                <div class="form-group">
+                                    <label for="">Floor</label>
+                                    <select name="floor" class="form-control">
+                                        <option value="1">Floor 1</option>
+                                        <option value="2">Floor 2</option>
+                                        <option value="3">Floor 3</option>
+                                    </select>
+                                </div>
                             </div>
                             <!-- /.card-body -->
 
