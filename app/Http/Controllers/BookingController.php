@@ -14,42 +14,36 @@ use Illuminate\Database\Eloquent\Builder;
 use Auth;
 class BookingController extends Controller
 {
-    
-    public function getRoomInBooking($start, $end, $people = 0, $select = ['*'], $exclude = null)
+    //check Room 
+    public function checkRoom($start, $end, $room_id=null)
     {
-        $data = Room::select($select)
-            ->where('large', '>=' , $people);
- 
-        if($exclude){
-            if(!is_array($exclude)){
-                $exclude = [$exclude];
-            }
-        }else{
-            $exclude = [];
+        $data = Booking::select([
+            'id',
+            'from_datetime',
+            'to_datetime',
+            'room_id',
+           
+        ]);
+        
+        if ($room_id) {
+            $data = $data->where('room_id', $room_id);
         }
 
-        $data = $data->where(function (Builder $builder) use ($start, $end, $exclude)  {
-                return $builder->whereDoesntHave('bookings', function ($query) use ($start, $end, $exclude) {
-                    $query->where(function(Builder $b) use ($start, $end){
-                        $b->where( function($q) use ($start, $end) {
-                            $q->whereDate('bookings.from_datetime', '<=', $start)
-                                ->whereDate('bookings.to_datetime', '>=', $end);
-                        })->orWhere(function ($q) use ($start, $end) {
-                            $q->whereDate('bookings.from_datetime', '>=', $start)
-                                ->whereDate('bookings.from_datetime', '<=', $end);
-                        })->orWhere(function ($q) use ($start, $end) {
-                            $q->whereDate('bookings.to_datetime', '>=', $start)
-                                ->whereDate('bookings.to_datetime', '<=', $end);
-                        })->orWhere(function ($q) use ($start, $end) {
-                            $q->whereDate('bookings.from_datetime', '>=', $start)
-                                ->whereDate('bookings.to_datetime', '<=', $end);
-                        });
-                    })->whereNotIn('bookings.room_id', $exclude);
-                    //3
+        $data = $data->where(function (Builder $builder) use ($start, $end) {
+            return $builder->where(function ($query) use ($start, $end) {
+                    $query->whereDate('from_datetime', '<=', $start)
+                        ->whereDate('to_datetime', '>=', $end);
+                })->orWhere(function ($query) use ($start, $end) {
+                    $query->whereDate('from_datetime', '>=', $start)
+                        ->whereDate('from_datetime', '<=', $end);
+                })->orWhere(function ($query) use ($start, $end) {
+                    $query->whereDate('to_datetime', '>=', $start)
+                        ->whereDate('to_datetime', '<=', $end);
+                })->orWhere(function ($query) use ($start, $end) {
+                    $query->whereDate('from_datetime', '>=', $start)
+                        ->whereDate('to_datetime', '<=', $end);
                 });
-        });
-        $data = $data->get();
-
+        })->get();
         return $data;
     }
 
@@ -92,8 +86,8 @@ class BookingController extends Controller
         return $data;
     }
 
-    //get room post edit
-    public function getRoomsIdNotIn($start, $end, $room_id = null, $exclude = null)
+    //check room in exclude
+    public function checkRoomInExclude($start, $end, $room_id = null, $exclude = null)
     {
         $data = Booking::select([
             'id',
@@ -144,7 +138,39 @@ class BookingController extends Controller
         $start = Carbon::parse($request->start)->toDateTimeString();
         $end = Carbon::parse($request->end)->toDateTimeString();
         $exclude = $request->input('exclude');
-        $data = $this->getRoomInBooking($start, $end, $people, ['rooms.id', 'name'], $exclude);
+
+        $data = Room::select("*")
+            ->where('large', '>=' , $people);
+ 
+        if($exclude){
+            if(!is_array($exclude)){
+                $exclude = [$exclude];
+            }
+        }else{
+            $exclude = [];
+        }
+
+        $data = $data->where(function (Builder $builder) use ($start, $end, $exclude)  {
+                return $builder->whereDoesntHave('bookings', function ($query) use ($start, $end, $exclude) {
+                    $query->where(function(Builder $b) use ($start, $end){
+                        $b->where( function($q) use ($start, $end) {
+                            $q->whereDate('bookings.from_datetime', '<=', $start)
+                                ->whereDate('bookings.to_datetime', '>=', $end);
+                        })->orWhere(function ($q) use ($start, $end) {
+                            $q->whereDate('bookings.from_datetime', '>=', $start)
+                                ->whereDate('bookings.from_datetime', '<=', $end);
+                        })->orWhere(function ($q) use ($start, $end) {
+                            $q->whereDate('bookings.to_datetime', '>=', $start)
+                                ->whereDate('bookings.to_datetime', '<=', $end);
+                        })->orWhere(function ($q) use ($start, $end) {
+                            $q->whereDate('bookings.from_datetime', '>=', $start)
+                                ->whereDate('bookings.to_datetime', '<=', $end);
+                        });
+                    })->whereNotIn('bookings.room_id', $exclude);
+                });
+        });
+        $data = $data->get();
+
         $response = [
             'error' => false,
             'message' => '',
@@ -191,7 +217,7 @@ class BookingController extends Controller
     {
         $date = $this->convertDatetime($request->start, $request->end);
         $room_id = $request->room;
-        $data = $this->getListingBookings($date['start'], $date['end'],$room_id);
+        $data = $this->checkRoom($date['start'], $date['end'],$room_id);
 
         if (!$data->count()) {
             $bookings = new Booking;
@@ -237,7 +263,7 @@ class BookingController extends Controller
     {
         $date = $this->convertDatetime($request->start, $request->end);
         $room_id = $request->room;
-        $data = $this->getRoomsIdNotIn($date['start'], $date['end'], $room_id, $room_id);
+        $data = $this->checkRoomsIdNotIn($date['start'], $date['end'], $room_id, $room_id);
 
         if (!$data->count()) {
             $bookings = Booking::find($request->id);
@@ -265,7 +291,7 @@ class BookingController extends Controller
     {
         $date = $this->convertDatetime($request->start, $request->end);
         $room_id = $request->room;
-        $data = $this->getTotalOfRoom($date['start'], $date['end'], $room_id);
+        $data = $this->checkRoomsIdNotIn($date['start'], $date['end'], $room_id);
 
         if (!$data->count()) {
             $bookings = Booking::find($request->id);
