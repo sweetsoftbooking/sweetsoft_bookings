@@ -45,10 +45,10 @@
                                     <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
                                         <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
                                         <ul class="fc-color-picker" id="color-chooser">
-                                            <li><a class="text-primary" href="#" id="blue"><i class="fas fa-square"></i></a></li>
-                                            <li><a class="text-warning" href="#" id="yellow"><i class="fas fa-square"></i></a></li>
-                                            <li><a class="text-success" href="#" id="green"><i class="fas fa-square"></i></a></li>
-                                            <li><a class="text-danger" href="#" id="pink"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-primary" id="blue"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-warning" id="orange"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-success" id="green"><i class="fas fa-square"></i></a></li>
+                                            <li><a class="text-danger" id="orangered"><i class="fas fa-square"></i></a></li>
                                             <!-- <li><a class="text-muted" href="#" id="gray"><i class="fas fa-square"></i></a></li> -->
                                         </ul>
                                     </div>
@@ -61,16 +61,12 @@
                                 <h4 class="card-title">Bookings of Room</h4>
                             </div>
                             <div class="card-body">
-                                <!-- the events -->
-                                <div id="external-events">
-                                    <div class="checkbox">
-                                        <label for="drop-remove">
-                                            <select name="" id="">
-                                                <option value="">--- LIST ROOM ---</option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                </div>
+   
+                                <select class="js-example-theme-multiple" name="rooms[]" multiple="multiple" style="width:190px" id="bookings_rooms">
+                                    
+                                    <option value=""></option>
+                                </select>
+                                 
                             </div>
                             <!-- /.card-body -->
                         </div>
@@ -78,11 +74,12 @@
                         
                     </div>
                 </div>
+                <!-- !THE CALENDAR -->
                 <!-- /.col -->
                 <div class="col-md-9">
                     <div class="card card-primary">
                         <div class="card-body p-0">
-                            <!-- !THE CALENDAR -->
+                           
                             @if(session('alert'))
                             <div class="col-md-8 alert alert-success alert-dismissible">
                                 <button type="button" class="close" data-dismiss="alert"
@@ -116,12 +113,12 @@
         <!--Content-->
         <div class="modal-content">
             <!-- !Header-->
-            <div class="modal-header text-center" style="background-color: orange">
+            <div class="modal-header text-center" style="background-color: ora" id="modal_header">
                 <div class="pull-left">
                     <button type="button" class="btn btn-danger" id="delete_event">Delete</button>
                 </div>
                 <h4 class="modal-title white-text w-100 font-weight-bold py-2" id="modal_title" style="color:white">Create Booking</h4>
-                <button type="button" class="close" id="top_close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" id="top_close" data-dismiss="modal" aria-label="Close" style="color:white">
                     <span aria-hidden="true" class="white-text">&times;</span>
                 </button>
                 <style>
@@ -179,6 +176,7 @@
                         <input type="hidden" id="end" name="end">
                         <input type="hidden" id="exclude" name="exclude">
                         <input type="hidden" id="booking_id">
+                        <input type="hidden" id="color">
                     </div>
                 </div>
 
@@ -219,12 +217,16 @@
 @endsection
 
 @section('script')
-<script src="public/js/moment.js"></script>
+<script src="js/moment.js"></script>
 <script>
     $(document).ready(function () {
-        $('.js-example-basic-single').select2();
+
         $('.js-example-basic-single').select2({
 
+        });
+        // $('.js-example-basic-multiple').select2();
+        $(".js-example-theme-multiple").select2({
+            theme: "classic"
         });
     });
 </script>
@@ -263,13 +265,24 @@
         var Calendar = FullCalendar.Calendar;
         var calendarEl = document.getElementById('calendar');
 
+        //clear modal
+        function clear(){
+            $('#add_event').data('action', 'add_event');
+            $('#modal_title').text("Create Booking");
+            $('.modal').find('input').val('');
+            $('.modal').find('textarea').val('');
+            $('#room').find('option').remove();
+            $('#message_error').hide();
+        }
+
         // FIXME: button add event / push event to calendar / click event
         var calendar = new Calendar(calendarEl, {
-            plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
+            plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'], //TODO: add view type list
+            defaultView: 'dayGridMonth',
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'addEventButton,dayGridMonth,timeGridWeek,timeGridDay'
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             select: function (start, end) {
                 // Display the modal.
@@ -283,46 +296,53 @@
             editable: true,
             eventLimit: true,
 
-            //TODO: button add event
-            customButtons: {
-                addEventButton: {
-                    text: 'add event...',
-                    click: function () {
-                        $('#add_event').data('action', 'add_event');
-                        $('#delete_event').hide();
-                        $('#modal_title').text("Create Booking");
-                        $('.modal').modal('show');
-                        $('.modal').find('#exclude').val('');
-
-                    }
-                }
-            },
-
             //TODO: add events to calendar
             events: function (info, successCallback, failureCallback) {
                 console.log(info);
+                var rooms = $('#bookings_rooms').val();
+                
                 $.ajax({
                     url: $('#calendar').data('get-listing'),
                     type: 'GET',
                     dataType: 'json',
                     data: {
                         start: info.startStr,
-                        end: info.endStr
+                        end: info.endStr,
+                        rooms
                     },
                     success: function (response) {
                         if (response.error == false) {
                             let events = [];
                             const data = response.data
+                            $("#bookings_rooms").html('');
                             data.map(function (val) { // map == foreach
                                 events.push({
                                     id: val.id,
-                                    title: val.title,
+                                    title: val.title + ' ( ' + val.room.name + ' )',
                                     start: moment(val.from_datetime).format('YYYY-MM-DD HH:mm:ss'),
                                     end: moment(val.to_datetime).format('YYYY-MM-DD HH:mm:ss'),
-                                    backgroundColor: 'green',
-                                    textColor: 'white'
+                                    backgroundColor: val.color,
+                                    textColor: 'white',
+                                    borderColor: 'white'
 
                                 })
+
+                                $("#bookings_rooms").append('<option value="' + val.room.id + '">' + val.room.name + '</option>')
+                                var optionValues =[];
+                                $('#bookings_rooms option').each(function(){
+                                if($.inArray(this.value, optionValues) >-1){
+                                    $(this).remove()
+                                }else{
+                                    optionValues.push(this.value);
+                                }
+                                });
+
+                                var select = $('#bookings_rooms');
+                                select.html(select.find('option').sort(function(x, y) {
+                                    // to change to descending order switch "<" for ">"
+                                    return $(x).text() > $(y).text() ? 1 : -1;
+                                }));
+
                             });
                             successCallback(events)
                         } else {
@@ -351,6 +371,7 @@
                     success: function (response) {
                         console.log(response.data);
                         const data = response.data;
+                        $('#modal_header').css('background-color',data.color);
                         $('#modal_title').text(data.title);
                         $('.modal').find('#title').val(data.title);
                         $('.modal').find('#exclude').val(data.room_id);
@@ -396,29 +417,55 @@
                     dataType: 'json',
                     data:{id:info.event.id,start , end},
                     success:function(){
-                        alert("success drag");
+                        calendar.refetchEvents();
                     },error:function(){ 
-                        // console.log([event.start,event.end])
-                        alert("error drag !!!!");
+                        alert("error drag");  
                         calendar.refetchEvents();
                     }
             });
         }
         });
+        
+        $('#blue').on('click',function(){
+            $('#modal_header').css("background-color", "blue");
+            clear();
+            $('#delete_event').hide();
+            $('.modal').modal('show');
+            $('.modal').find('#exclude').val('');
+            $('#color').val("blue");
+        });
+        $('#green').on('click',function(){
+            $('#modal_header').css("background-color", "green");
+            clear();
+            $('#delete_event').hide();
+            $('.modal').modal('show');
+            $('.modal').find('#exclude').val('');
+            $('#color').val("green");
+        });
+        $('#orange').on('click',function(){
+            $('#modal_header').css("background-color", "orange");
+            clear();
+            $('#delete_event').hide();
+            $('.modal').modal('show');
+            $('.modal').find('#exclude').val('');
+            $('#color').val("orange");
+        });
+        $('#orangered').on('click',function(){
+            $('#modal_header').css("background-color", "orangered");
+            clear();
+            $('#delete_event').hide();
+            $('.modal').modal('show');
+            $('.modal').find('#exclude').val('');
+            $('#color').val("orangered");
+        });
 
         $('#close_event').on('click', function () {
-            $('.modal').find('input').val('');
-            $('.modal').find('textarea').val('');
-            $('#room').find('option').remove();
-            $('#message_error').hide();
+            clear();
 
         });
 
         $('#top_close').on('click', function () {
-            $('.modal').find('input').val('');
-            $('.modal').find('textarea').val('');
-            $('#room').find('option').remove();
-            $('#message_error').hide();
+            clear();
         });
 
         $('.modal').modal('hide');
@@ -477,8 +524,7 @@
 
         });
 
-
-       
+        //FIXME: add event / edit event
         $('#add_event').on('click', function () {
             var title = $('#title').val();
             var people = $('#people').val();
@@ -487,6 +533,8 @@
             var content = $('#content').val();
             var room = $('#room').val();
             var id = $('#booking_id').val();
+            var color = $('#color').val();
+            // alert(color);
 
             //TODO: add event
             if ($('#add_event').data('action') == 'add_event') {
@@ -495,7 +543,7 @@
                     url,
                     type: 'POST',
                     dataType: 'json',
-                    data: { title, people, start, end, content, room },
+                    data: { title, people, start, end, content, room, color },
                     success: function (response) {
                         if (response.error == false) {
                             calendar.refetchEvents();
@@ -567,12 +615,14 @@
         });
 
         // TODO: delete event
-        $('#delete_event').on('click',function(){
+        $('#delete_event').on('click',function(info){
             var id = $('#booking_id').val();
             $.ajax({
                 url: $('#calendar').data('post-delete'),
                 type: 'POST',
+                dataType: 'json',
                 data: {id},
+                    
                 success:function(response){
                     if (response.error == false) {
                             calendar.refetchEvents(); //refresh fullcalendar
@@ -589,9 +639,15 @@
                 error:function(response){
 
                 }
+                
             });
         });
 
+        $('#bookings_rooms').on('change',function(){
+            calendar.refetchEvents();
+            
+            
+        });
     });
 </script>
 @endsection

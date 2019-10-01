@@ -19,21 +19,21 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
     </script>
     <!-- Bootstrap Core CSS -->
-    <link href="public/assets/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
+    <link href="assets/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
     <!-- Custom CSS -->
-    <link href="public/assets/css/style.css" rel='stylesheet' type='text/css' />
+    <link href="assets/css/style.css" rel='stylesheet' type='text/css' />
     <!-- Graph CSS -->
-    <link href="public/assets/css/font-awesome.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.css" rel="stylesheet">
     <!-- jQuery -->
     <!-- lined-icons -->
-    <link rel="stylesheet" href="public/assets/css/icon-font.min.css" type='text/css' />
+    <link rel="stylesheet" href="assets/css/icon-font.min.css" type='text/css' />
     <!-- //lined-icons -->
     <!-- chart -->
-    <script src="public/assets/js/Chart.js"></script>
+    <script src="assets/js/Chart.js"></script>
     <!-- //chart -->
     <!--animate-->
-    <link href="public/assets/css/animate.css" rel="stylesheet" type="text/css" media="all">
-    <script src="public/assets/js/wow.min.js"></script>
+    <link href="assets/css/animate.css" rel="stylesheet" type="text/css" media="all">
+    <script src="assets/js/wow.min.js"></script>
     <script>
         new WOW().init();
     </script>
@@ -43,7 +43,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         rel='stylesheet' type='text/css'>
     <!---//webfonts--->
     <!-- Meters graphs -->
-    <script src="public/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="assets/js/jquery-1.10.2.min.js"></script>
     <!-- Placed js at the end of the document so the pages load faster -->
 
 </head>
@@ -189,10 +189,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         <!--footer section end-->
     </section>
 
-    <script src="public/assets/js/jquery.nicescroll.js"></script>
-    <script src="public/assets/js/scripts.js"></script>
+    <script src="assets/js/jquery.nicescroll.js"></script>
+    <script src="assets/js/scripts.js"></script>
     <!-- Bootstrap Core JavaScript -->
-    <script src="public/assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
     <script>
         $('#password, #confirm_password').on('keyup', function () {
             if ($('#password').val() == $('#confirm_password').val()) {

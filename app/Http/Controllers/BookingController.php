@@ -18,7 +18,6 @@ class BookingController extends Controller
     public function checkRoom($start, $end, $room_id=null)
     {
         $data = Booking::select([
-            'id',
             'from_datetime',
             'to_datetime',
             'room_id',
@@ -47,8 +46,8 @@ class BookingController extends Controller
         return $data;
     }
 
-    //get list booking
-    public function getListingBookings($start, $end, $room_id = null, $exclude = null)
+    //get list booking bt permission
+    public function getListBookingsByPermission($start, $end)
     {
         $data = Booking::select([
                 'id',
@@ -56,12 +55,9 @@ class BookingController extends Controller
                 'to_datetime',
                 'title',
                 'room_id',
-                'user_id'
+                'user_id',
+                'color'
             ])->with(['room:id,name']);
-            
-        if ($room_id) {
-            $data = $data->where('room_id', $room_id);
-        }
 
         $user = Auth::user();
         if(!$user->hasPermission('bookings.list')){
@@ -90,12 +86,9 @@ class BookingController extends Controller
     public function checkRoomInExclude($start, $end, $room_id = null, $exclude = null)
     {
         $data = Booking::select([
-            'id',
             'from_datetime',
             'to_datetime',
-            'title',
-            'room_id',
-            'user_id'
+            'room_id'
         ]);
     
         //get room to check
@@ -189,14 +182,52 @@ class BookingController extends Controller
         ];
     }
     
+    //get list bookings by room_id
+    public function getListBookingsByRoomId($start, $end, $rooms=null)
+    {
+        $data = Booking::select([
+                'id',
+                'from_datetime',
+                'to_datetime',
+                'title',
+                'room_id',
+                'user_id',
+                'color'
+            ])->with(['room:id,name']);
+
+        if ($rooms) {
+            $data = $data->whereIn('room_id', $rooms);
+        }
+
+    
+
+        $data = $data->where(function (Builder $builder) use ($start, $end) {
+                return $builder->where(function ($query) use ($start, $end) {
+                        $query->whereDate('from_datetime', '<=', $start)
+                            ->whereDate('to_datetime', '>=', $end);
+                    })->orWhere(function ($query) use ($start, $end) {
+                        $query->whereDate('from_datetime', '>=', $start)
+                            ->whereDate('from_datetime', '<=', $end);
+                    })->orWhere(function ($query) use ($start, $end) {
+                        $query->whereDate('to_datetime', '>=', $start)
+                            ->whereDate('to_datetime', '<=', $end);
+                    })->orWhere(function ($query) use ($start, $end) {
+                        $query->whereDate('from_datetime', '>=', $start)
+                            ->whereDate('to_datetime', '<=', $end);
+                    });
+            })->orderBy('name','ASC')->get();
+        return $data;
+    }
+
     //! GET - POST
     
     public function getIndex()
     {
-        return view('booking.booking_index');
+        $rooms = Room::orderBy('name','ASC')->get();
+        return view('booking.booking_index',compact('rooms'));
     }
 
-    public function getListing(Request $request)
+    public function getList(Request $request)
     {
         $response = [
             'error' => false, // if == true is function error, else false
@@ -204,11 +235,15 @@ class BookingController extends Controller
             'message' => 'ban lay du lieu thanh cong',
         ];
 
-        $start = Carbon::parse($request->start)->toDateTimeString();
-        $end = Carbon::parse($request->end)->toDateTimeString();
+        $date = $this->convertDatetime($request->start, $request->end);
 
-        $event = $this->getListingBookings($start, $end);
+        $event = $this->getListBookingsByPermission($date['start'], $date['end']);
         
+        $rooms = $request->rooms;
+        if($rooms){
+            $event = $this->getListBookingsByRoomId($date['start'], $date['end'], $rooms);
+        }
+
         $response['data'] = $event;
         return response()->json($response);
     }
@@ -221,7 +256,7 @@ class BookingController extends Controller
 
         if (!$data->count()) {
             $bookings = new Booking;
-            $bookings->fill($request->only(['people', 'content', 'title']));
+            $bookings->fill($request->only(['people', 'content', 'title', 'color']));
             $bookings->from_datetime = $date['start'];
             $bookings->to_datetime = $date['end'];
             $bookings->room_id = $room_id;
@@ -263,11 +298,11 @@ class BookingController extends Controller
     {
         $date = $this->convertDatetime($request->start, $request->end);
         $room_id = $request->room;
-        $data = $this->checkRoomsIdNotIn($date['start'], $date['end'], $room_id, $room_id);
+        $data = $this->checkRoomInExclude($date['start'], $date['end'], $room_id, $room_id);
 
         if (!$data->count()) {
             $bookings = Booking::find($request->id);
-            $bookings->fill($request->only(['people', 'content', 'title']));
+            $bookings->fill($request->only(['people', 'content', 'title', 'color']));
             $bookings->from_datetime = $date['start'];
             $bookings->to_datetime = $date['end'];
             $bookings->room_id = $room_id;
@@ -291,7 +326,7 @@ class BookingController extends Controller
     {
         $date = $this->convertDatetime($request->start, $request->end);
         $room_id = $request->room;
-        $data = $this->checkRoomsIdNotIn($date['start'], $date['end'], $room_id);
+        $data = $this->checkRoomInExclude($date['start'], $date['end'], $room_id, $room_id);
 
         if (!$data->count()) {
             $bookings = Booking::find($request->id);
@@ -315,15 +350,37 @@ class BookingController extends Controller
 
     }
 
-
     public function postDelete(Request $request){
         $bookings = Booking::find($request->id);
         $bookings->delete();
+        
         return response()->json([
             'error' => false,
-            'data' => [],
+            'data' => $data,
             'message' => 'Success',
         ]);
+        
+        
+    }
+
+    public function getBookings(Request $request){
+        $date = $this->convertDatetime($request->start, $request->end);
+        $rooms = $request->rooms;
+        $data = $this->getListBookingsByRoomId($date['start'], $date['end'], $rooms);
+        
+        if(!$data->count()){
+            return response()->json()([
+                'error' => false,
+                'data' => $data,
+                'message' => 'Success'
+            ]);
+        }
+        
+        return response()->json()([
+            'error' => true,
+            'data' => $data,
+            'message' => 'Fail'
+        ]); 
     }
 
     public function _getAdd(Request $request)

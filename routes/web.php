@@ -37,7 +37,7 @@ Route::group([
 
         Route::get('listing',[
             'as' => 'bookings.listing',
-            'uses' => 'BookingController@getListing',
+            'uses' => 'BookingController@getList',
             'permission' => 'bookings.view'
             ]);
         Route::get('rooms',[

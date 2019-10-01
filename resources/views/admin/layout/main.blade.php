@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
   
   <!-- Theme style -->
-  <link href="public/assets/css/hummingbird-treeview.css" rel="stylesheet">
+  <link href="assets/css/hummingbird-treeview.css" rel="stylesheet">
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   
   <!-- Google Font: Source Sans Pro -->
@@ -76,7 +76,7 @@
 <script src="plugins/fullcalendar-timegrid/main.min.js"></script>
 <script src="plugins/fullcalendar-interaction/main.min.js"></script>
 <script src="plugins/fullcalendar-bootstrap/main.min.js"></script>
-<script src="public/assets/js/hummingbird-treeview.js"></script>
+<script src="assets/js/hummingbird-treeview.js"></script>
 <script src="plugins/daterangepicker/daterangepicker.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
