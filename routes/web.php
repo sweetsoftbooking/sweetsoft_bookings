@@ -15,7 +15,11 @@
 Route::group([
     'prefix' => 'admin','middleware'=>'auth'
     ], function () {
-    
+        Route::get('/',[
+            'as' => 'dashboard.index',
+            'uses' => 'DashboardController@getIndex',
+            'permission' => 'bookings.view'
+        ]);
     Route::group(['prefix' => 'dashboard'], function(){
         Route::get('/',[
             'as' => 'dashboard.index',

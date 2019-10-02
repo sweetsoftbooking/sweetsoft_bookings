@@ -121,7 +121,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer clearfix">
-              {!!$bookings->links()!!}
+              {{$bookings->links()}}
             </div>
           </div>
 

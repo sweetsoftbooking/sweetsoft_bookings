@@ -18,14 +18,14 @@ class DashboardController extends Controller
     public function BookingToday(){
         $bookings = Booking::with('room:id,name')
                     ->whereDate('from_datetime','<=',Carbon::today())
-                    ->whereDate('to_datetime','>=',Carbon::today())
-                    ->paginate(10); 
-        
+                    ->whereDate('to_datetime','>=',Carbon::today());
+
         $user = Auth::user();
         if(!$user->hasPermission('bookings.list')){
             $bookings = $bookings->where('user_id',$user->id);
         }
 
+        $bookings = $bookings->paginate(10);
         return $bookings;
     }
 
@@ -59,7 +59,8 @@ class DashboardController extends Controller
                     $query->whereDate('to_datetime', '>=', $dayStart)
                         ->whereDate('to_datetime', '<=', $dayEnd);
                 });
-        })->paginate(10);
+        });
+        $bookings = $bookings->paginate(10);
         return $bookings;
     }
 
