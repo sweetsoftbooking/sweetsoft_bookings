@@ -16,12 +16,29 @@ Route::group([
     'prefix' => 'admin','middleware'=>'auth'
     ], function () {
     
-    Route::get('/',[
-        'as' => 'admin.index',
-        'uses' => 'AdminController@getIndex',
+    Route::group(['prefix' => 'dashboard'], function(){
+        Route::get('/',[
+            'as' => 'dashboard.index',
+            'uses' => 'DashboardController@getIndex',
+            'permission' => 'bookings.view'
+        ]);
+        Route::post('booking/delete',[
+            'as' => 'booking.delete',
+            'uses' => 'DashboardController@postBookingDelete',
+            'permission' => 'bookings.delete'
+        ]);
+        Route::get('booking-week',[
+            'as' => 'booking-week.list',
+            'uses' => 'DashboardController@getBookingWeek',
+            'permission' => 'bookings.view'
+        ]);
+        Route::get('booking-today',[
+            'as' => 'booking-today.list',
+            'uses' => 'DashboardController@getBookingToday',
+            'permission' => 'bookings.view'
+        ]);
 
-    ]);
-
+    });
 
     Route::group(['prefix' => 'booking'], function () {
         Route::get('/',[

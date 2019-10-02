@@ -30,7 +30,4 @@ class AdminController extends Controller
         return redirect('login');
     }
 
-    public function getIndex(){
-        return view('admin.admin_index');
-    }
 }
