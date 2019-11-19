@@ -199,8 +199,6 @@ class BookingController extends Controller
             $data = $data->whereIn('room_id', $rooms);
         }
 
-    
-
         $data = $data->where(function (Builder $builder) use ($start, $end) {
                 return $builder->where(function ($query) use ($start, $end) {
                         $query->whereDate('from_datetime', '<=', $start)
@@ -215,7 +213,7 @@ class BookingController extends Controller
                         $query->whereDate('from_datetime', '>=', $start)
                             ->whereDate('to_datetime', '<=', $end);
                     });
-            })->orderBy('name','ASC')->get();
+            })->get();
         return $data;
     }
 

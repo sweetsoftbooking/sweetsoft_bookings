@@ -10,11 +10,6 @@ class Booking extends Model
 
     protected $guarded = [];
 
-    public function event()
-    {
-        return $this->belongsTo('App\Event', 'event_id', 'id');
-    }
-
     public function room()
     {
         return $this->belongsTo('App\Room', 'room_id', 'id');

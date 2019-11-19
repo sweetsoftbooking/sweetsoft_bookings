@@ -2,10 +2,19 @@
 
 @section('content')
 <div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>User</h1>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
     <section class="content">
         <div class="row">
             <div class="col-12">
-                    <h3>List User</h3>
                 <div class="card">
                     @if(session('alert'))
                     <div class="alert alert-success">

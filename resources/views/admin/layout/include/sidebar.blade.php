@@ -45,15 +45,6 @@
         </li>
 
         <li class="nav-item">
-          <a href="{{route('events.list')}}" class="nav-link">
-            <i class="nav-icon far fa-calendar-plus"></i>
-            <p>
-              Event
-            </p>
-          </a>
-        </li>
-
-        <li class="nav-item">
           <a href="{{route('rooms.list')}}" class="nav-link">
             <i class="nav-icon fas fa-hospital"></i>
             <p>
@@ -66,7 +57,7 @@
           <a href="{{route('bookings.list')}}" class="nav-link">
             <i class="nav-icon fas fa-bookmark"></i>
             <p>
-              Booking
+              Calendar
             </p>
           </a>
         </li>

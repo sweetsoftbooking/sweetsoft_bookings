@@ -61,14 +61,6 @@
                                     <label>Large</label>
                                     <input type="number" name="large" min="1" max="1000" class="form-control">
                                 </div>
-                                <div class="form-group">
-                                    <label for="">Floor</label>
-                                    <select name="floor" class="form-control">
-                                        <option value="1">Floor 1</option>
-                                        <option value="2">Floor 2</option>
-                                        <option value="3">Floor 3</option>
-                                    </select>
-                                </div>
                             </div>
                             <!-- /.card-body -->
 

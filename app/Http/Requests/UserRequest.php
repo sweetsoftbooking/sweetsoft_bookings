@@ -24,14 +24,14 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'same:confirmation',
+            'password' => 'same:confirm',
         ];
     }
 
     public function messages()
     {
         return [
-            'password.same' => 'Password Confirmation not correct',
+            'password.same' => 'Password Confirm not correct',
         ];
     }
 }

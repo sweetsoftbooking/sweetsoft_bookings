@@ -2,10 +2,19 @@
 
 @section('content')
 <div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Room</h1>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
     <section class="content">
         <div class="row">
             <div class="col-12">
-                    <h3>Room</h3>
                 <div class="card">
                     @if(session('alert'))
                     <div class="alert alert-success">
@@ -22,7 +31,6 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Large</th>
-                                    <th>Floor</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -31,7 +39,6 @@
                                 <tr>
                                     <td>{{$e->name}}</td>
                                     <td>{{$e->large}}</td>
-                                    <td>{{$e->floor}}</td>
                                     <td>
                                         <a class="btn btn-primary" href="{{route('rooms.edit',$e->id)}}">Edit</a>
                                         <a class="btn btn-danger" href="{{route('rooms.delete',$e->id)}}">Delete</a>
