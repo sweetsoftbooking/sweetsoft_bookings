@@ -9,12 +9,6 @@
                 <div class="col-sm-6">
                     <h1>Room</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Room</li>
-                    </ol>
-                </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
@@ -32,7 +26,7 @@
                         </div>
                         @endif
                         <div class="card-header">
-                            <h3 class="card-title">Edit Room</h3>
+                            <h3 class="card-title">Edit Room ({{$room->name}})</h3>
                         </div>
                         @if ($errors->any())
                         @foreach ($errors->all() as $error)
@@ -44,10 +38,6 @@
                         <form role="form" action="{{route('rooms.edit',$room->id)}}" method="POST">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" name="name" class="form-control" value="{{$room->name}}">
-                                </div>
-                                <div class="form-group">
                                     <label>Information</label>
                                     <input type="text" name="information" class="form-control" value="{{$room->information}}">
                                 </div>
@@ -55,6 +45,17 @@
                                     <label>Large</label>
                                     <input type="number" name="large" min="1" max="1000" class="form-control" value="{{$room->large}}">
                                 </div>
+                                <div class="form-group">
+                                    <label>Status</label>
+
+                                    <input type="radio" class="flat" name="status"
+                                        value="1" {{$room->status==1?'checked':''}}
+                                        ><label>Published&emsp;</label>
+
+                                    <input type="radio" class="flat" name="status"
+                                        value="0" {{$room->status==0?'checked':''}}
+                                        ><label>Maintenance</label>
+                                 </div>
                                 
                             </div>
                             <!-- /.card-body -->

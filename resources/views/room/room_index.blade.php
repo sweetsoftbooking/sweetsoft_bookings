@@ -31,6 +31,7 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Large</th>
+                                    <th>Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -39,6 +40,7 @@
                                 <tr>
                                     <td>{{$e->name}}</td>
                                     <td>{{$e->large}}</td>
+                                    <td>{{$e->status==1?"Published":"Maintenance"}}</td>
                                     <td>
                                         <a class="btn btn-primary" href="{{route('rooms.edit',$e->id)}}">Edit</a>
                                         <a class="btn btn-danger" href="{{route('rooms.delete',$e->id)}}">Delete</a>

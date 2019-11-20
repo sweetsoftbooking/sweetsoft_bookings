@@ -101,7 +101,29 @@
 </div>
 
 <!-- !MODAL -->
-@include('partials.modal-booking')
+    @include('partials.modal-booking')
+
+    <!-- {{-- MODAL DELETE --}}
+    <div class="modal modal-delete" tabindex="-1" role="dialog" id="">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">Delete Booking</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <p>Are you sure want to delete this booking?</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirm_delete">OK</button>
+            <input type="hidden" id="delete_id">
+            </div>
+        </div>
+        </div>
+    </div> -->
 @endsection
 
 @section('script')
@@ -125,6 +147,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         // TODO: daterangepicker
         const $reservationtime = $('#reservationtime')
         //Date range picker with time picker
@@ -151,7 +174,39 @@
         });
 
         var Calendar = FullCalendar.Calendar;
-        var calendarEl = document.getElementById('calendar');
+        var Draggable = FullCalendarInteraction.Draggable;
+
+        let shiftIsPressed = false;
+
+        function setEventsCopyable(isCopyable) {
+        shiftIsPressed = !shiftIsPressed;
+        calendar.setOption("droppable", isCopyable);
+        calendar.setOption("editable", !isCopyable);
+        }
+
+        document.addEventListener("keydown", event => {
+        if (event.keyCode === 16 && !shiftIsPressed) {
+            setEventsCopyable(true);
+        }
+        });
+
+        document.addEventListener("keyup", event => {
+        if (shiftIsPressed) {
+            setEventsCopyable(false);
+        }
+        });
+
+        let containerEl = document.getElementById("calendar");
+        let calendarEl = document.getElementById("calendar");
+
+        new Draggable(containerEl, {
+            itemSelector: ".fc-event",
+            eventData: function(eventEl) {
+            return {
+                title: eventEl.innerText
+            };
+            }
+        });
 
         //clear modal
         function clear(){
@@ -183,6 +238,9 @@
             selectHelper: true,
             editable: true,
             eventLimit: true,
+            dropAccept(el) {
+                return shiftIsPressed;
+            },
 
             //TODO: add events to calendar
             events: function (info, successCallback, failureCallback) {
@@ -310,9 +368,11 @@
                         alert("error drag");  
                         calendar.refetchEvents();
                     }
-            });
-        }
+                });
+            }
         });
+
+        window.focus();
         
         $('#blue').on('click',function(){
             $('#modal_header').css("background-color", "blue");
@@ -535,5 +595,7 @@
             calendar.refetchEvents();
         });
     });
+
+    
 </script>
 @endsection

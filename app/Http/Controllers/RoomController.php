@@ -30,7 +30,7 @@ class RoomController extends Controller
         return view('room.room_edit',compact('room'));
     }
 
-    public function postEdit(RoomRequest $request,$id){
+    public function postEdit(Request $request,$id){
         $room = Room::find($id);
         $room->fill($request->input());
         $room->save();

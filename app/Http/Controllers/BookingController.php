@@ -133,6 +133,7 @@ class BookingController extends Controller
         $exclude = $request->input('exclude');
 
         $data = Room::select("*")
+            ->where('status', 1)
             ->where('large', '>=' , $people);
  
         if($exclude){
@@ -273,6 +274,38 @@ class BookingController extends Controller
         ]);
     }
 
+    public function getTotalOfRoom($start, $end, $room_id = null, $exclude = null)
+    {
+        $data = Booking::select(['id', 'from_datetime', 'to_datetime', 'title', 'room_id'])
+                        ->with(['room:id,name']);
+        if ($room_id) {
+            $data = $data->where('room_id', $room_id);
+        }
+        if($exclude){
+            if(!is_array($exclude)){
+                $exclude = [$exclude];
+            }
+        }else{
+            $exclude = [];
+        }
+        $data = $data->where(function (Builder $builder) use ($start, $end) {
+                return $builder->where(function ($query) use ($start, $end) {
+                        $query->whereDate('from_datetime', '<=', $start)
+                            ->whereDate('to_datetime', '>=', $end);
+                    })->orWhere(function ($query) use ($start, $end) {
+                        $query->whereDate('from_datetime', '>=', $start)
+                            ->whereDate('from_datetime', '<=', $end);
+                    })->orWhere(function ($query) use ($start, $end) {
+                        $query->whereDate('to_datetime', '>=', $start)
+                            ->whereDate('to_datetime', '<=', $end);
+                    })->orWhere(function ($query) use ($start, $end) {
+                        $query->whereDate('from_datetime', '>=', $start)
+                            ->whereDate('to_datetime', '<=', $end);
+                    });
+            })->get();
+        return $data;
+    }
+
     public function getEdit($id=null, Request $request){
         if(!$id){
             $id = $request->input('id');
@@ -296,11 +329,10 @@ class BookingController extends Controller
     {
         $date = $this->convertDatetime($request->start, $request->end);
         $room_id = $request->room;
-        $data = $this->checkRoomInExclude($date['start'], $date['end'], $room_id, $room_id);
-
+        $data = $this->getTotalOfRoom($date['start'], $date['end'], $room_id);
         if (!$data->count()) {
             $bookings = Booking::find($request->id);
-            $bookings->fill($request->only(['people', 'content', 'title', 'color']));
+            $bookings->fill($request->only(['people', 'content', 'title']));
             $bookings->from_datetime = $date['start'];
             $bookings->to_datetime = $date['end'];
             $bookings->room_id = $room_id;
@@ -317,18 +349,17 @@ class BookingController extends Controller
             'data' => [],
             'message' => 'Fail',
         ]);
-
     }
 
     public function postDrag(PostDragRequest $request)
     {
         $date = $this->convertDatetime($request->start, $request->end);
-        $room_id = $request->room;
-        $data = $this->checkRoomInExclude($date['start'], $date['end'], $room_id, $room_id);
-
-        if (!$data->count()) {
-            $bookings = Booking::find($request->id);
-           
+        $bookings = Booking::find($request->id);
+        $room = $bookings->room_id;
+        $data = $this->getTotalOfRoom($date['start'], $date['end'], $room);
+        
+        if (!$data->count()) {      
+            $bookings = Booking::find($request->id);  
             $bookings->from_datetime = $date['start'];
             $bookings->to_datetime = $date['end'];
             $bookings->user_id = \Auth::user()->id;
@@ -354,7 +385,6 @@ class BookingController extends Controller
         
         return response()->json([
             'error' => false,
-            'data' => $data,
             'message' => 'Success',
         ]);
         

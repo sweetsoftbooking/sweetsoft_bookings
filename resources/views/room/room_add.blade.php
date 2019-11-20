@@ -61,6 +61,16 @@
                                     <label>Large</label>
                                     <input type="number" name="large" min="1" max="1000" class="form-control">
                                 </div>
+                                <div class="form-group">
+                                <br /><label>Status&emsp;</label>
+
+                                <input type="radio" class="flat" name="status" checked=""
+                                    value="1">Published&emsp;
+
+                                <input type="radio" class="flat" name="status"
+                                    value="0">Maintenance
+
+                            </div>
                             </div>
                             <!-- /.card-body -->
 

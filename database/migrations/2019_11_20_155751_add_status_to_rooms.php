@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColorIntoEventsTable extends Migration
+class AddStatusToRooms extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColorIntoEventsTable extends Migration
      */
     public function up()
     {
-        Schema::table('events', function (Blueprint $table) {
-            $table->string('color');
+        Schema::table('rooms', function (Blueprint $table) {
+            $table->string('status');
         });
     }
 
@@ -25,6 +25,8 @@ class AddColorIntoEventsTable extends Migration
      */
     public function down()
     {
-        $table->dropColumn('color');
+        Schema::table('rooms', function (Blueprint $table) {
+            //
+        });
     }
 }
