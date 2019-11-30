@@ -76,11 +76,17 @@ Route::group([
             'uses' => 'BookingController@postEdit',
             'permission' => 'bookings.edit'
         ]);
-        Route::post('drag/{id?}',[
+        Route::get('drag/{id?}',[
             'as' => 'bookings.drag',
             'uses' => 'BookingController@postDrag',
             'permission' => 'bookings.edit'
         ]);
+        Route::post('delete/{id?}',[
+            'as' => 'bookings.delete',
+            'uses' => 'BookingController@postDelete',
+            'permission' => 'bookings.delete'
+        ]);
+
         Route::post('delete/{id?}',[
             'as' => 'bookings.delete',
             'uses' => 'BookingController@postDelete',

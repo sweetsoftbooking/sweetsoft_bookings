@@ -359,9 +359,9 @@
                 var end = moment(info.event.end).format('DD-MM-YYYY HH:mm');
                 $.ajax({
                     url,
-                    type: 'POST',
+                    type: 'GET',
                     dataType: 'json',
-                    data:{id:info.event.id,start , end},
+                    data:{id:info.event.id, start , end},
                     success:function(){
                         calendar.refetchEvents();
                     },error:function(){ 
